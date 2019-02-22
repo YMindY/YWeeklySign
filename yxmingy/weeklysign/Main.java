@@ -15,7 +15,7 @@ public class Main extends PluginBase{
 	private static Config record;
 	public void onEnable() {
 		conf = new Config(getDataFolder()+"/Config.yml",Config.YAML);
-		record = new Config(getDataFolder()+"Rec.yml",Config.YAML);
+		record = new Config(getDataFolder()+"/Rec.yml",Config.YAML);
 		if(conf.getAll().isEmpty()) {
 			String[][] cmdsString = new String[7][1];
 			int i = 1;
