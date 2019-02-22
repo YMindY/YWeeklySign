@@ -3,3 +3,11 @@ api: ["1.0.0"]
 version: "1.0.0_alpha"
 load: POSTWORLD
 main: yxmingy.weeklysign.Main
+commands:
+ sign:
+  description: "签到"
+  usage: "/sign [星期数(数字)]"
+  permission: yxmingy.command.sign
+permissions:
+ yxmingy.command.sign: 
+  default: true
