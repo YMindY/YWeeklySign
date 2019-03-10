@@ -37,6 +37,7 @@ public class Main extends PluginBase{
 		Date now = new Date();
 		cal.setTime(now);
 		int w = cal.get(Calendar.DAY_OF_WEEK)-1;
+		if(w == 0) w = 7;
 		if(!args[0].contentEquals(String.valueOf(w))) {
 			sender.sendMessage("今天是星期"+String.valueOf(w));
 			return true;
