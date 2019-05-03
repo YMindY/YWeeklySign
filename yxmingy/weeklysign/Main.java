@@ -4,6 +4,8 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import cn.nukkit.Player;
+import cn.nukkit.Server;
 import cn.nukkit.command.Command;
 import cn.nukkit.command.CommandSender;
 import cn.nukkit.command.ConsoleCommandSender;
@@ -11,7 +13,7 @@ import cn.nukkit.plugin.PluginBase;
 import cn.nukkit.utils.Config;
 
 public class Main extends PluginBase{
-	private Config conf;
+	private static Config conf;
 	private static Config record;
 	public void onEnable() {
 		conf = new Config(getDataFolder()+"/Config.yml",Config.YAML);
@@ -55,5 +57,33 @@ public class Main extends PluginBase{
 		record.set(sender.getName(), date);
 		record.save();
 		return true;
+	}
+	public static boolean isSignedToday(Player player) {
+		Date now = new Date();
+		String date = DateFormat.getDateInstance().format(now);
+		return (record.exists(player.getName()) && record.getString(player.getName()).contentEquals(date));
+	}
+	public static String[] getDayRewardCommands(int day) {
+		return (String[])conf.get(String.valueOf(day));
+	}
+	public static void signIn(Player player) {
+		Calendar cal = Calendar.getInstance();
+		Date now = new Date();
+		cal.setTime(now);
+		int w = cal.get(Calendar.DAY_OF_WEEK)-1;
+		if(w == 0) w = 7;
+		if(isSignedToday(player)) return;
+		@SuppressWarnings("unchecked")
+		ArrayList<String> cmds = (ArrayList<String>)conf.get(String.valueOf(w));
+		for (int i = 0; i < cmds.size(); i++) {
+			Server.getInstance().dispatchCommand(new ConsoleCommandSender(), cmds.get(i).replaceAll("@p", player.getName()));
+		}
+		updateSignRecord(player);
+	}
+	public static void updateSignRecord(Player player) {
+		Date now = new Date();
+		String date = DateFormat.getDateInstance().format(now);
+		record.set(player.getName(), date);
+		record.save();
 	}
 }
